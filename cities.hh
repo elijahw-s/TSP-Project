@@ -5,6 +5,7 @@
 #pragma once
 
 #include <vector>
+#include <iostream>
 
 
 // Representation of an ordering of cities
@@ -17,11 +18,18 @@ class Cities {
   // into the current city ordering in some container.
   using permutation_t = std::vector<unsigned int>;
 
+  Cities();
+
+  std::istream& operator>>(std::istream&);
+  std::ostream& operator<<(std::ostream&);
+
   // Given a permutation, return a new Cities object where the order of the
   // cities reflects the original order of this class after reordering with
   // the given ordering. So for example, the ordering { 1, 0 } simply swaps
   // the first two elements (coordinates) in the new Cities object.
-  Cities reorder(const permutation_t& ordering) const;
+  Cities reorder(const Cities::permutation_t& new_ordering);
+
+  permutation_t random_permutation(unsigned len) const;
 
   // For a given permutation of the cities in this object,
   // compute how long (distance) it would take to traverse all the cities in the
@@ -29,4 +37,8 @@ class Cities {
   // The distance between any two cities is computed as the Euclidean 
   // distance on a plane between their coordinates.
   double total_path_distance(const permutation_t& ordering) const;
+
+ private:
+  permutation_t ordering;
+  std::vector<coord_t> coords_vector;
 };
