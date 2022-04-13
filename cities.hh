@@ -18,7 +18,7 @@ class Cities {
   // into the current city ordering in some container.
   using permutation_t = std::vector<unsigned int>;
 
-  Cities();
+  Cities(){};
 
   std::istream& operator>>(std::istream&);
   std::ostream& operator<<(std::ostream&);
@@ -27,16 +27,27 @@ class Cities {
   // cities reflects the original order of this class after reordering with
   // the given ordering. So for example, the ordering { 1, 0 } simply swaps
   // the first two elements (coordinates) in the new Cities object.
-  Cities reorder(const Cities::permutation_t& new_ordering);
+  Cities 
+  reorder(const Cities::permutation_t& new_ordering);
 
-  permutation_t random_permutation(unsigned len) const;
+  // .input_coord(coord) appends a coordinate to the cities coords_vector
+  void
+  input_coord(coord_t coord){coords_vector.push_back(coord);}
+
+  // .size() returns the number of cities contained within a cities object
+  unsigned
+  size(){return coords_vector.size();}
+
+  permutation_t static
+  random_permutation(unsigned len);
 
   // For a given permutation of the cities in this object,
   // compute how long (distance) it would take to traverse all the cities in the
   // order of the permutation, and then returning to the first city.
   // The distance between any two cities is computed as the Euclidean 
   // distance on a plane between their coordinates.
-  double total_path_distance(const permutation_t& ordering) const;
+  double 
+  total_path_distance(const permutation_t& ordering) const;
 
  private:
   permutation_t ordering;

@@ -9,35 +9,33 @@ int main(int argc, char* argv[]){
         std::cerr << "arguments expected\n";
         throw ;
     }
-    Cities cities = Cities();
+    Cities cities;
 
     std::filesystem::path file_path {argv[1]};
-    std::ifstream is (file_path);
+    std::ifstream is (file_path);       // creates input stream from a file
     file_path = "shortest.tsv";
-    std::ofstream os (file_path);
+    std::ofstream os (file_path);       // creates output stream to a file
     cities >> is;
     is.close();
 
-    Cities best_cities = Cities();
+    Cities best_cities;
 
     double best_path = -1;
-    int new_path = 0;
+    double new_path = 0;
 
-    for (int i=0; i<1000; i++){
-        Cities new_cities = cities.reorder();
-        new_path = new_cities.total_path_distance(new_cities.ordering);
-        if (best_path == -1){
+    for (int i=0; i<10000; i++){
+        Cities::permutation_t new_perm = Cities::random_permutation(cities.size());     // creates a new permutation for each iteration
+        new_path = cities.total_path_distance(new_perm);        // calculates the path length with the given permutation
+        if (best_path == -1){           // if it is the first city...
             best_path = new_path;
-            best_cities = new_cities;
-            std::cout << i << ' ' << best_path;
-        } else if (best_path > new_path){
-            best_cities = new_cities;
-            best_path = new_path;
-            std::cout << i << ' ' << best_path;
+            best_cities = cities.reorder(new_perm);
+            std::cout << i << ": " << best_path << "\n";
+        } else if (best_path > new_path){   // if the new path is shorter than the previous shortest path...
+            best_path = new_path;       // make the new path the best path
+            best_cities = cities.reorder(new_perm); // create a city where the coords_vector is in the order of the best path
+            std::cout << i << ": " << best_path << "\n";
         }
     }
-    cities << os;
+    best_cities << os;
     os.close();
-    std::cout << cities.total_path_distance({ 0, 1, 2, 3, 4 }) << "\n";
-    std::cout << cities.total_path_distance({ 3, 2, 4, 0, 1 }) << "\n";
 }
